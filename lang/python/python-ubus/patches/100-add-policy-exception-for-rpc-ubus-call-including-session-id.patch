@@ -1,0 +1,24 @@
+From 7a8d0eb4e13b40e4a878307d776f1976dfb26db7 Mon Sep 17 00:00:00 2001
+From: Jonny Tischbein <jonny_tischbein@systemli.org>
+Date: Thu, 2 Jun 2022 08:47:36 +0200
+Subject: [PATCH] Add policy exception for RPC ubus call including session id
+
+---
+ ubus_python.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/ubus_python.c b/ubus_python.c
+index 1803718..5dbf9a2 100644
+--- a/ubus_python.c
++++ b/ubus_python.c
+@@ -766,6 +766,11 @@ bool test_policies(const struct blobmsg_policy *policies, int n_policies, struct
+ 		int type = blobmsg_type(cur);
+ 		int pol_idx;
+
++         	// Skip comparision if RPC session ID is given
++		if (!strcmp("ubus_rpc_session", name)){
++		        continue;
++		}
++
+ 		// Iterate through policies
+ 		for (pol_idx = 0; pol_idx < n_policies; pol_idx++) {
